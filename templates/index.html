@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Python Calculator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .ascii-art {
+            font-size: 10px;
+            color: #00FF00;
+            white-space: pre-wrap;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .calculator {
+            background: #111;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        h1 {
+            font-family: 'Brush Script MT', cursive;
+            color: gold;
+            margin-bottom: 20px;
+            font-size: 38px;
+            text-shadow: 2px 2px #333;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0;
+            border-radius: 10px;
+            border: none;
+            font-size: 18px;
+            background-color: #222;
+            color: #fff;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+        }
+
+        button {
+            background: linear-gradient(135deg, #ff6600, #ff3300);
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #ff3300, #ff6600);
+            transform: scale(1.05);
+        }
+
+        #result {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #222;
+            color: #00ff99;
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="ascii-art">
+    _____________________<br>
+|  _________________  |<br>
+| | Pythonista   0. | |  .----------------.  .----------------.  .----------------.  .----------------. <br>
+| |_________________| | | .--------------. || .--------------. || .--------------. || .--------------. |<br>
+|  ___ ___ ___   ___  | | |     ______   | || |      __      | || |   _____      | || |     ______   | |<br>
+| | 7 | 8 | 9 | | + | | | |   .' ___  |  | || |     /  \     | || |  |_   _|     | || |   .' ___  |  | |<br>
+| |___|___|___| |___| | | |  / .'   \_|  | || |    / /\ \    | || |    | |       | || |  / .'   \_|  | |<br>
+| | 4 | 5 | 6 | | - | | | |  | |         | || |   / ____ \   | || |    | |   _   | || |  | |         | |<br>
+| |___|___|___| |___| | | |  \ `.___.'\  | || | _/ /    \ \_ | || |   _| |__/ |  | || |  \ `.___.'\  | |<br>
+| | 1 | 2 | 3 | | x | | | |   `._____.'  | || ||____|  |____|| || |  |________|  | || |   `._____.'  | |<br>
+| |___|___|___| |___| | | |              | || |              | || |              | || |              | |<br>
+| | . | 0 | = | | / | | | '--------------' || '--------------' || '--------------' || '--------------' |<br>
+| |___|___|___| |___| |  '----------------'  '----------------'  '----------------'  '----------------' <br>
+|_____________________|
+</div>
+
+<div class="calculator">
+    <h1>Python Calculator</h1>
+    <input type="number" id="num1" placeholder="Enter First Number">
+    
+    <select id="operator">
+        <option value="+">Addition (+)</option>
+        <option value="-">Subtraction (-)</option>
+        <option value="*">Multiplication (*)</option>
+        <option value="/">Division (/)</option>
+        <option value="%">Modulus (%)</option>
+    </select>
+    
+    <input type="number" id="num2" placeholder="Enter Second Number">
+    
+    <button onclick="calculate()">Calculate</button>
+    
+    <div id="result"></div>
+</div>
+
+<script>
+    function calculate() {
+        const n1 = parseFloat(document.getElementById("num1").value);
+        const n2 = parseFloat(document.getElementById("num2").value);
+        const op = document.getElementById("operator").value;
+
+        fetch("/calculate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ n1, n2, op })
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("result").innerText = "Result: " + data.result;
+            document.getElementById("result").style.display = "block";
+        })
+        .catch(err => {
+            document.getElementById("result").innerText = "Error occurred!";
+            document.getElementById("result").style.display = "block";
+        });
+    }
+</script>
+
+</body>
+</html>
